@@ -20,9 +20,17 @@ tri_mesh_map_table1 <- function(tabs, max_area = NULL) {
   
   ## create Triangle's Planar Straight Line Graph
   ## which is an index matrix S of every vertex pair P
+#  ps <- RTriangle::pslg(P = as.matrix(tabs$v[, c("x_", "y_")]),
+#                        S = do.call(rbind, lapply(split(nonuq, nonuq$branch_),
+#                                                  function(x) path2seg(x$countingIndex))))
+
+  ## create Triangle's Planar Straight Line Graph
+  ## which is an index matrix S of every vertex pair P
   ps <- RTriangle::pslg(P = as.matrix(tabs$v[, c("x_", "y_")]),
                         S = do.call(rbind, lapply(split(nonuq, nonuq$branch_),
-                                                  function(x) path2seg(x$countingIndex))))
+                                                  function(x) path2seg(x$countingIndex))), 
+                        PA = matrix(tabs$v$z_))
+  
   
   ## build the triangulation, with input max_area (defaults to NULL)
   tr <- RTriangle::triangulate(ps, a = max_area)
@@ -52,7 +60,7 @@ tri_mesh_map_table1 <- function(tabs, max_area = NULL) {
   
   ## trace and remove any unused triangles
   ## the raw vertices with a unique vertex_ id
-  tabs$v <- tibble::tibble(x_ = tr$P[,1], y_ = tr$P[,2], vertex_ = spbabel:::id_n(nrow(tr$P)))
+  tabs$v <- tibble::tibble(x_ = tr$P[,1], y_ = tr$P[,2], z_ = tr$PA[, 1], vertex_ = spbabel:::id_n(nrow(tr$P)))
   ## drop the path topology
   tabs$b <- tabs$bXv <- NULL
   ## add triangle topology

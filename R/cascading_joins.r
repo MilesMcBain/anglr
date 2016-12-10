@@ -6,6 +6,7 @@ semi_join_be_quiet_if_there_is_only_1 <- function(x, y, by = NULL, copy = FALSE,
   semi_join(x, y, by = by, copy = copy, ...)
 }
 
+#' be quiet my semi_join won't work anymore when we have Z
 
 #' Cascading subset on object for \code{map_table}. 
 #'
